@@ -2,8 +2,6 @@
 
 // It reads a json formatted text file and outputs it.
 
-$string = file_get_contents("data.json");
-
     echo' {
         "cols": [
         {"label":"Time","type":"string"},
