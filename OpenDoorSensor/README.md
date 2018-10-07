@@ -12,9 +12,9 @@ Information you need to provide to use this project:
 * Update the Arduino ino file to:
     * set your WiFi router name and password
     * set the server name and path to your updateDoorStatus.php script, and your own secret password
-    * Update the updateDoorStatus.php script to:
-        * set your own secret password
-        * set the email address for the recipient. In my case I use email-to-text, so I receive the updates as text messages.
+* Update the updateDoorStatus.php script to:
+    * set your own secret password
+    * set the email address for the recipient. In my case I use email-to-text, so I receive the updates as text messages.
 
 Parts:
 * 1 Wemos D1 Mini or compatible, or similar ESP8266 based Arduino dev board.
