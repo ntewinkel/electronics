@@ -33,7 +33,7 @@ const int httpPort = 80;
 // identify this specific sensor with a unique ID (for the server to tell them apart)
 String doorID = "1";
 
-byte SWITCH = D4;
+byte SWITCH = D3;
 byte ledPin = BUILTIN_LED; // built in LED is D4
 bool door_open = false;
 unsigned long starttime;
