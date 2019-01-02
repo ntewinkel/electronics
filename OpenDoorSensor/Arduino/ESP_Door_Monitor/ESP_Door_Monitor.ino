@@ -5,7 +5,7 @@
 // Reed switch triggers LED light on after slight delay, tracks open time, and sends updates to the server
 //
 // Using internal pullup, so no external resistor needed (it would go to 3.3v otherwise)
-// D4 - switch - GND  // likely a reed switch.
+// D3 - switch - GND  // likely a reed switch.
 //
 // Server Expects updates in the form:
 // http://yourserver.com/yourdoorstatusfolder/updateDoorStatus.php?secret=somethingsecret&doorID=1&status=CLOSED&opentime=3:44
