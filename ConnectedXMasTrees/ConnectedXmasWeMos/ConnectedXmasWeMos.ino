@@ -43,9 +43,10 @@ const char otherTreeID = '2';  //  ie, one WeMos gets programmed with myTreeID =
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-#define BUTTON D4
-#define LED_TREETOP D2
-#define LED_TREE    D3
+// For Wemos D1 Mini, the built-in LED is D4
+#define MOTION_SENSOR D3  // D8 has built-in 10k pull-down, D3 has pull-up
+#define LED_TREETOP D1
+#define LED_TREE    D2
 
 #define LED_ON  HIGH
 #define LED_OFF LOW
@@ -54,7 +55,7 @@ PubSubClient client(espClient);
 #define MINUTE (60ul * SECOND)
 
 #define TREE_ON_TIME 10*SECOND // 5*MINUTE
-#define MIN_TIME_BETWEEN_MESSAGES MINUTE
+#define MIN_TIME_BETWEEN_MESSAGES 5*SECOND
 
 unsigned long timeThisTreeTurnedOn;
 unsigned long timeOtherTreeTurnedOn;
@@ -75,7 +76,7 @@ void setup() {
   digitalWrite(LED_TREETOP, LED_OFF);
   digitalWrite(LED_TREE, LED_OFF);
 
-  pinMode(BUTTON, INPUT_PULLUP);
+  pinMode(MOTION_SENSOR, INPUT);  // use a 10k external resistor to ground
 
   connectWiFi();
 
@@ -172,7 +173,7 @@ void loop() {
   // check for motion, unless motion was already detected recently
   if (millis() - timeOtherTreeTurnedOn > MIN_TIME_BETWEEN_MESSAGES) {
     // instead of button, will have motion sensor
-    if (digitalRead(BUTTON) == LOW) {
+    if (digitalRead(MOTION_SENSOR) == HIGH) {
       Serial.println("Motion detected!");
       lightOtherTree();
     }
