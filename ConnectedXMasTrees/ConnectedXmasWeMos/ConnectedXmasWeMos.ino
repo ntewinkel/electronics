@@ -6,6 +6,7 @@
  * Using MQTT, motion sensed at one tree will light the other tree
  * 
  * Motion sensed also lights the tip of the local tree, to give indication to the local user.
+ * Note that motion sensor will likely need external power. Or use a simple pushbutton
  * 
  * free service: https://www.hivemq.com/try-out/
   http://www.mqtt-dashboard.com/
@@ -32,8 +33,7 @@ const char* password = "YourWiFiPassword"; // replace with your own WiFi network
 
 // MQTT server
 const char* mqtt_server = "broker.hivemq.com";
-const char* mqtt_topic = "ConnectedXmasTreeTopic"; // Make this unique in case others are doing the same - maybe add your name to the end.
-
+const char* mqtt_topic = "ConnectedXmasTreeTopic";
 char mqtt_message[50];
 
 const char myTreeID = '1';     // switch these two numbers for the second tree.
@@ -44,9 +44,9 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 // For Wemos D1 Mini, the built-in LED is D4
-#define MOTION_SENSOR D3  // D8 has built-in 10k pull-down, D3 has pull-up
-#define LED_TREETOP D1
-#define LED_TREE    D2
+#define MOTION_SENSOR D2 // same as button on Witty  // D8 has *external, always-active* 10k pull-down, D3 has pull-up
+#define LED_TREETOP D6   // same as Green RGB LED on Witty
+#define LED_TREE    D8   // same as Red RGB LED on Witty
 
 #define LED_ON  HIGH
 #define LED_OFF LOW
@@ -72,6 +72,9 @@ void setup() {
   
   pinMode(LED_TREETOP, OUTPUT);
   pinMode(LED_TREE, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  flashBuiltInLED(2);
 
   digitalWrite(LED_TREETOP, LED_OFF);
   digitalWrite(LED_TREE, LED_OFF);
@@ -79,12 +82,15 @@ void setup() {
   pinMode(MOTION_SENSOR, INPUT);  // use a 10k external resistor to ground
 
   connectWiFi();
+  flashBuiltInLED(5);
 
   Serial.println("Setting up MQTT connection");
   client.setServer(mqtt_server, 1883);
   client.setCallback(mqtt_callback);
 
   Serial.println("Setup is complete.\n");
+
+  flashThisTree(2);
 }
 
 void connectWiFi() {
@@ -98,6 +104,7 @@ void connectWiFi() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    flashBuiltInLED(1);
   }
  
   Serial.println("");
@@ -121,7 +128,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 
   // Switch on this tree if an 1 was received as first character
   if ((char)payload[0] == myTreeID) {
-    flashThisTree();
+    flashThisTree(7);
     
     if (length == 1) {
       lightThisTree();
@@ -215,12 +222,22 @@ void lightThisTree() {
   timeThisTreeTurnedOn = millis();
 }
 
-void flashThisTree() {
-  for (int i=0; i<7; i++) {
+void flashThisTree(int count) {
+  for (int i=0; i<count; i++) {
     digitalWrite(LED_TREE, LED_ON);
     delay(100);
     digitalWrite(LED_TREE, LED_OFF);
     delay(100);
   }
+}
+
+void flashBuiltInLED(int count) {
+    for (int i=0; i<count; i++) {
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(100);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(100);
+  }
+
 }
 
