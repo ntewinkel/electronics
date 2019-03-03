@@ -14,7 +14,7 @@ The process is as follows:
 
 2. The IoT device calls logMultiSensorValues.php in the following format:
 http://localhost/sensors/logMultiSensorValues?sensorID=007&values={%22inside%20temp%22:22.5,%22outside%20temp%22:15.1}
-Quotes and spaces should be url-encoded. There is no real limit to how many temperatures can be sent in the list.
+Quotes and spaces should be url-encoded. There is no real limit to how many temperatures can be sent in the list. The values are in json format.
 
 3. The php script (server side) stores the data into a .csv file. If the file does not exist, it writes the first line of the file with the titles provided in the values array that was sent by the IoT device - ie, the IoT device labels the graph lines
 
