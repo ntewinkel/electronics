@@ -1,6 +1,6 @@
 <?php
 
-// It reads a json formatted text file and outputs it.
+// Reads a CSV formatted text file and outputs it in the special format needed for the Google Graphing API.
 
 $sensorID = $_GET["sensorID"];
 
