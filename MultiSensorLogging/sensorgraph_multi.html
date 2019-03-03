@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Temperature Graph</title>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    function GetURLParameter(sParam)
+    {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++) 
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam) 
+            {
+                return sParameterName[1];
+            }
+        }
+    }
+
+    var sensorID = GetURLParameter('sensorID')
+
+    if (!sensorID || 0 === sensorID.length) {
+      sensorID = "001"
+    }
+
+    document.title = "Temperature Graph for Sensor " + sensorID
+
+    // Load the Visualization API.
+    google.load('visualization', '1', {'packages':['corechart']});
+     
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.setOnLoadCallback(drawChart);
+     
+    function drawChart() {
+      var jsonData = $.ajax({
+          url: "getMultiData.php?sensorID=" + sensorID,
+          dataType:"json",
+          async: false
+          }).responseText;
+      
+      // Create our data table out of JSON data loaded from server.
+      var data = new google.visualization.DataTable(jsonData);
+
+      var options = {
+        chartArea: {
+           top: 28,
+           height: '80%' 
+        },
+        legend: {position:'top'},
+        series: {
+          0: { color: "red" },
+          1: { color: "blue" },
+        },
+        hAxis: {
+            title: 'Timestamp', 
+            titleTextStyle: {color: 'black'}, 
+            count: -1, 
+            viewWindowMode: 'pretty', 
+            slantedText: true
+        },  
+        vAxis: {
+            title: 'Temperature (deg C)', 
+            titleTextStyle: {color: 'black'}, 
+//            viewWindowMode: 'explicit',
+//            viewWindow: {min: 0, max: 30},
+            count: -1, 
+        },
+        colors: ['#F1CA3A'],
+        height: 800
+      };
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+
+    </script>
+  </head>
+
+  <body>
+    <!--Div that will hold the column chart-->
+    <div id="chart_div"></div>
+
+  </body>
+</html>
