@@ -5,8 +5,6 @@ The server side is handled via the php scripts included here.
 
 Please feel free to use it as you wish (thus the MIT license)
 
-If you find it helpful and/or it makes you rich, please buy me a coffee :)
-
 To see a full description of this project and how it works, please see my blog entry on element14.com:
 https://www.element14.com/community/community/project14/mixing-electronics-water/blog/2018/04/13/remote-temperature-monitoring
 
